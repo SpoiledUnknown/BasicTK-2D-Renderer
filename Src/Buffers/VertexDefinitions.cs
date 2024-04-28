@@ -1,8 +1,8 @@
 using OpenTK.Mathematics;
 
-namespace OpenTKProject
+namespace BasicTK_2D_Renderer.Src.Buffers
 {
-    public readonly struct VertextAttribute 
+    public readonly struct VertextAttribute
     {
         public readonly string Name;
         public readonly int Index;

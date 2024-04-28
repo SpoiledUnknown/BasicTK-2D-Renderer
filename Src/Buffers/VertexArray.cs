@@ -1,7 +1,7 @@
 using System;
 using OpenTK.Graphics.OpenGL;
 
-namespace OpenTKProject
+namespace BasicTK_2D_Renderer.Src.Buffers
 {
     public sealed class VertexArray : IDisposable
     {
@@ -21,13 +21,13 @@ namespace OpenTKProject
 
             VertexBuffer = vertexBuffer;
 
-            int vertexSizeInBytes = this.VertexBuffer.VertexInfo.SizeInBytes;
+            int vertexSizeInBytes = VertexBuffer.VertexInfo.SizeInBytes;
             VertextAttribute[] attributes = VertexBuffer.VertexInfo.VertextAttributes;
 
             VertexArrayHandle = GL.GenVertexArray();
             GL.BindVertexArray(VertexArrayHandle);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, this.VertexBuffer.VertexBufferHandle);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBuffer.VertexBufferHandle);
 
 
             for (int i = 0; i < attributes.Length; i++)

@@ -1,7 +1,7 @@
 using System;
 using OpenTK.Graphics.OpenGL;
 
-namespace OpenTKProject
+namespace BasicTK_2D_Renderer.Src.Buffers
 {
     public sealed class IndexBuffer : IDisposable
     {
@@ -14,10 +14,10 @@ namespace OpenTKProject
         public readonly int IndexCount;
         public readonly bool IsStatic;
 
-        public IndexBuffer (int indexCount, bool isStatic = true)
+        public IndexBuffer(int indexCount, bool isStatic = true)
         {
-            if (indexCount < IndexBuffer.MinIndexCount ||
-            indexCount > IndexBuffer.MaxIndexCount)
+            if (indexCount < MinIndexCount ||
+            indexCount > MaxIndexCount)
             {
                 throw new ArgumentOutOfRangeException(nameof(indexCount));
             }

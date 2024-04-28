@@ -1,7 +1,7 @@
 using System;
 using OpenTK.Graphics.OpenGL;
 
-namespace OpenTKProject
+namespace BasicTK_2D_Renderer.Src.Buffers
 {
     public sealed class VertexBuffer : IDisposable
     {
@@ -19,8 +19,8 @@ namespace OpenTKProject
         {
             isDisposed = false;
 
-            if (vertexCount < VertexBuffer.MinVertexCount ||
-            vertexCount > VertexBuffer.MaxVertexCount)
+            if (vertexCount < MinVertexCount ||
+            vertexCount > MaxVertexCount)
             {
                 throw new ArgumentOutOfRangeException(nameof(vertexCount));
             }
@@ -50,7 +50,7 @@ namespace OpenTKProject
 
         public void Dispose()
         {
-            if(isDisposed) return;
+            if (isDisposed) return;
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.DeleteBuffer(VertexBufferHandle);
@@ -66,7 +66,7 @@ namespace OpenTKProject
                 throw new ArgumentException("Generic type 'T' does not match the vertex type of vertex buffer");
             }
 
-            if ( data is null)
+            if (data is null)
             {
                 throw new ArgumentNullException(nameof(data));
             }

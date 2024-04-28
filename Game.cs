@@ -2,9 +2,12 @@
 using OpenTK.Windowing.Desktop;
 using OpenTK.Mathematics;
 using OpenTK.Graphics.OpenGL;
+using BasicTK_2D_Renderer.Src.Buffers;
+using BasicTK_2D_Renderer.Src;
 
-namespace OpenTKProject
+namespace BasicTK_2D_Renderer
 {
+
     public class Game : GameWindow
     {
         private VertexBuffer vertexBuffer;
@@ -14,27 +17,28 @@ namespace OpenTKProject
 
         private int vertexCount;
         private int indexCount;
+        private List<Box> boxCount;
 
-        private float colorFactor = 1f;
-        private float deltaColorFactor = 1f / 240f;
+        private const float colorFactor = 1f;
 
-        public Game(string title, int height, int width, VSyncMode haveVsync, WindowState isFullscreen)
+        public Game(string title, int height, int width, List<Box> boxCount, VSyncMode haveVsync, WindowState isFullscreen, WindowBorder windowBorder)
             : base(
                   GameWindowSettings.Default,
                   new NativeWindowSettings()
                   {
                       Title = title,
-                      Size = new Vector2i(width, height),
                       Vsync = haveVsync,
                       WindowState = isFullscreen,
-                      WindowBorder = WindowBorder.Fixed,
+                      WindowBorder = windowBorder,
                       StartVisible = false,
                       StartFocused = true,
                       API = ContextAPI.OpenGL,
+                      MinimumSize = new Vector2i(width, height),
                       Profile = ContextProfile.Core
                   })
         {
             CenterWindow();
+            this.boxCount = boxCount;
         }
 
         public static NativeWindowSettings GetNativeWindowSettings()
@@ -50,39 +54,24 @@ namespace OpenTKProject
 
             GL.ClearColor(Color4.DimGray);
 
-            // Drawing Boxes
-            Random rand = new Random();
 
-            int windowWidth = ClientSize.X;
-            int windowHeight = ClientSize.Y;
-
-            int boxCount = 20000;
-
-            VertexPositionColor[] vertices = new VertexPositionColor[boxCount * 4];
+            VertexPositionColor[] vertices = new VertexPositionColor[boxCount.Count * 4];
             vertexCount = 0;
 
-            for (int i = 0; i < boxCount; i++)
+            foreach (Box box in boxCount)
             {
-                int w  = rand.Next(32, 128);
-                int h  = rand.Next(32, 128);
-                int x  = rand.Next(0, windowWidth - w);
-                int y  = rand.Next(0, windowHeight - h);
 
-                float r = (float)rand.NextDouble();
-                float g = (float)rand.NextDouble();
-                float b = (float)rand.NextDouble();
-
-                vertices[vertexCount++] = new VertexPositionColor(new Vector2(x, y + h), new Color4(r, g, b, 1f));
-                vertices[vertexCount++] = new VertexPositionColor(new Vector2(x + w, y + h), new Color4(r, g, b, 1f));
-                vertices[vertexCount++] = new VertexPositionColor(new Vector2(x + w, y), new Color4(r, g, b, 1f));
-                vertices[vertexCount++] = new VertexPositionColor(new Vector2(x, y), new Color4(r, g, b, 1f));
+                vertices[vertexCount++] = new VertexPositionColor(new Vector2(box.x, box.y + box.height), box.color);
+                vertices[vertexCount++] = new VertexPositionColor(new Vector2(box.x + box.width, box.y + box.height), box.color);
+                vertices[vertexCount++] = new VertexPositionColor(new Vector2(box.x + box.width, box.y), box.color);
+                vertices[vertexCount++] = new VertexPositionColor(new Vector2(box.x, box.y), box.color);
             }
 
-            int[] indices =  new int[boxCount * 6];
+            int[] indices = new int[boxCount.Count * 6];
             indexCount = 0;
             vertexCount = 0;
 
-            for (int i = 0; i < boxCount; i++)
+            for (int i = 0; i < boxCount.Count; i++)
             {
                 indices[indexCount++] = 0 + vertexCount;
                 indices[indexCount++] = 1 + vertexCount;
@@ -94,13 +83,13 @@ namespace OpenTKProject
                 vertexCount += 4;
             }
 
-            vertexBuffer =  new VertexBuffer(VertexPositionColor.VertextInfo, vertices.Length, true);
+            vertexBuffer = new VertexBuffer(VertexPositionColor.VertextInfo, vertices.Length, true);
             vertexBuffer.SetData(vertices, vertices.Length);
 
-            indexBuffer =  new IndexBuffer(indices.Length, true);
+            indexBuffer = new IndexBuffer(indices.Length, true);
             indexBuffer.SetData(indices, indices.Length);
 
-            vertexArray =  new VertexArray(vertexBuffer);
+            vertexArray = new VertexArray(vertexBuffer);
 
             string vertextShaderCode =
                 @"
@@ -142,7 +131,7 @@ namespace OpenTKProject
             int[] viewport = new int[4];
             GL.GetInteger(GetPName.Viewport, viewport);
 
-            shaderProgram.SetUniform("ViewportSize", (float)viewport[2], (float)viewport[3]);
+            shaderProgram.SetUniform("ViewportSize", viewport[2], viewport[3]);
             shaderProgram.SetUniform("ColorFactor", colorFactor);
 
             base.OnLoad();
@@ -167,22 +156,6 @@ namespace OpenTKProject
 
         protected override void OnUpdateFrame(FrameEventArgs args)
         {
-            colorFactor += deltaColorFactor;
-
-            if (colorFactor >= 1f)
-            {
-                colorFactor = 1f;
-                deltaColorFactor *= -1f;
-            }
-
-            if (colorFactor <= 0f)
-            {
-                colorFactor = 0f;
-                deltaColorFactor *= -1f;
-            }
-
-            shaderProgram.SetUniform("ColorFactor", colorFactor);
-
             base.OnUpdateFrame(args);
         }
 

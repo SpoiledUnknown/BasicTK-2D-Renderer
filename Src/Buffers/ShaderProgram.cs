@@ -1,7 +1,7 @@
 using System;
 using OpenTK.Graphics.OpenGL;
 
-namespace OpenTKProject
+namespace BasicTK_2D_Renderer.Src.Buffers
 {
     public readonly struct ShaderUniform
     {
@@ -46,20 +46,20 @@ namespace OpenTKProject
         {
             isDisposed = false;
 
-            if (!ShaderProgram.CompileVertexShader(vertexShaderCode, out VertexShaderHandle, out string vertexShaderCompileError))
+            if (!CompileVertexShader(vertexShaderCode, out VertexShaderHandle, out string vertexShaderCompileError))
             {
                 throw new ArgumentException(vertexShaderCompileError);
             }
 
-            if (!ShaderProgram.CompilePixelShader(pixelShaderCode, out PixelShaderHandle, out string pixelShaderCompileError))
+            if (!CompilePixelShader(pixelShaderCode, out PixelShaderHandle, out string pixelShaderCompileError))
             {
                 throw new ArgumentException(pixelShaderCompileError);
             }
 
-            ShaderProgramHandle = ShaderProgram.CreateLinkProgram(VertexShaderHandle, PixelShaderHandle);
+            ShaderProgramHandle = CreateLinkProgram(VertexShaderHandle, PixelShaderHandle);
 
-            uniforms = ShaderProgram.createUniformList(ShaderProgramHandle);
-            attributes = ShaderProgram.createAttributeList(ShaderProgramHandle);
+            uniforms = createUniformList(ShaderProgramHandle);
+            attributes = createAttributeList(ShaderProgramHandle);
         }
 
         ~ShaderProgram()
@@ -110,7 +110,7 @@ namespace OpenTKProject
                 throw new ArgumentException("Uniform type is not float.");
             }
 
-            
+
             GL.UseProgram(ShaderProgramHandle);
             GL.Uniform1(uniform.Location, v1);
             GL.UseProgram(0);
@@ -128,7 +128,7 @@ namespace OpenTKProject
                 throw new ArgumentException("Uniform type is not float.");
             }
 
-            
+
             GL.UseProgram(ShaderProgramHandle);
             GL.Uniform2(uniform.Location, v1, v2);
             GL.UseProgram(0);
@@ -153,14 +153,14 @@ namespace OpenTKProject
 
         public static bool CompileVertexShader(string vertexShaderCode, out int vertexShaderHandle, out string errorMessage)
         {
-            errorMessage =  string.Empty;
+            errorMessage = string.Empty;
 
             vertexShaderHandle = GL.CreateShader(ShaderType.VertexShader);
             GL.ShaderSource(vertexShaderHandle, vertexShaderCode);
             GL.CompileShader(vertexShaderHandle);
 
             string vertexShaderInfo = GL.GetShaderInfoLog(vertexShaderHandle);
-            if(vertexShaderInfo != string.Empty)
+            if (vertexShaderInfo != string.Empty)
             {
                 errorMessage = vertexShaderInfo;
                 return false;
