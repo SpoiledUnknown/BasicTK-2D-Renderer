@@ -11,8 +11,21 @@ WindowState winState = WindowState.Maximized;
 WindowBorder border = WindowBorder.Resizable;
 List<Box> boxList = new List<Box>();
 
-Box box = new Box(10, 20, 20, 50, Color4.Aqua);
+Color4 color = Color4.Brown;
+
+
+Box box = new Box(100, 100, 240, 50, color);
 boxList.Add(box);
+
+Box box2 = new Box(100, 100, 400, 50, color);
+boxList.Add(box2);
+
+Box box3 = new Box(300, 100, 320, 100, color);
+boxList.Add(box3);
+
+//Box box4 = new Box(50, 50, 345, 400, color);
+//boxList.Add(box4);
+
 
 Game _game = new Game(title, height, width, boxList, syncMode, winState, border);
 _game.Run();
