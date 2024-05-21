@@ -14,18 +14,16 @@ List<Box> boxList = new List<Box>();
 Color4 color = Color4.Brown;
 
 
-Box box = new Box(100, 100, 240, 50, color);
-boxList.Add(box);
-
-Box box2 = new Box(100, 100, 400, 50, color);
-boxList.Add(box2);
-
-Box box3 = new Box(300, 100, 320, 100, color);
-boxList.Add(box3);
-
-//Box box4 = new Box(50, 50, 345, 400, color);
-//boxList.Add(box4);
-
+Box box = CreateSprite(100, 100, 240, 50, color);
+Box box1 = CreateSprite(100, 100, 400, 50, color);
+Box box2 = CreateSprite(300, 100, 320, 100, color);
 
 Game _game = new Game(title, height, width, boxList, syncMode, winState, border);
 _game.Run();
+
+Box CreateSprite(int height, int width, int x, int y, Color4 color)
+{
+    Box box = new Box(height, width, x, y, color);
+    boxList.Add(box);
+    return box;
+}

@@ -10,6 +10,7 @@ namespace BasicTK_2D_Renderer
 
     public class Game : GameWindow
     {
+        #nullable disable
         private VertexBuffer vertexBuffer;
         private IndexBuffer indexBuffer;
         private VertexArray vertexArray;
