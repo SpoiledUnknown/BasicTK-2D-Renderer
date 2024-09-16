@@ -5,25 +5,30 @@ using OpenTK.Mathematics;
 
 
 string title = "BasicTK - 2D Renderer";
-int height = 480, width = 854;
+int windowHeight = 480, windowWidth = 854;
 VSyncMode syncMode = VSyncMode.On;
 WindowState winState = WindowState.Maximized;
 WindowBorder border = WindowBorder.Resizable;
+
+int boxCount = 10000;
 List<Box> boxList = new List<Box>();
 
-Color4 color = Color4.Brown;
+Color4 color = Color4.LimeGreen;
 
-
-Box box = CreateSprite(100, 100, 240, 50, color);
-Box box1 = CreateSprite(100, 100, 400, 50, color);
-Box box2 = CreateSprite(300, 100, 320, 100, color);
-
-Game _game = new Game(title, height, width, boxList, syncMode, winState, border);
-_game.Run();
-
-Box CreateSprite(int height, int width, int x, int y, Color4 color)
+for (int i = 0; i < boxCount; i++)
 {
-    Box box = new Box(height, width, x, y, color);
-    boxList.Add(box);
-    return box;
+    Random rand = new Random();
+    int w = rand.Next(32, 128);
+    int h = rand.Next(32, 128);
+    int x = rand.Next(0, windowWidth - w);
+    int y = rand.Next(0, windowHeight - h);
+
+    float r = (float)rand.NextDouble();
+    float g = (float)rand.NextDouble();
+    float b = (float)rand.NextDouble();
+
+    boxList.Add(new Box(h, w, x, y, new Color4(r, g, b, 1f)));
 }
+
+Game game = new Game(title, windowHeight, windowWidth, boxList, syncMode, winState, border);
+game.Run();

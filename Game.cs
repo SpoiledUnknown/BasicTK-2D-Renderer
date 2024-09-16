@@ -7,7 +7,6 @@ using BasicTK_2D_Renderer.Src;
 
 namespace BasicTK_2D_Renderer
 {
-
     public class Game : GameWindow
     {
         #nullable disable
@@ -20,7 +19,8 @@ namespace BasicTK_2D_Renderer
         private int indexCount;
         private List<Box> boxCount;
 
-        private const float colorFactor = 1f;
+        private float colorFactor = 1f;
+        private float deltaColorFactor = 1f / 480f;
 
         public Game(string title, int height, int width, List<Box> boxCount, VSyncMode haveVsync, WindowState isFullscreen, WindowBorder windowBorder)
             : base(
@@ -53,7 +53,7 @@ namespace BasicTK_2D_Renderer
         {
             IsVisible = true;
 
-            GL.ClearColor(Color4.DimGray);
+            GL.ClearColor(Color4.LightSkyBlue);
 
 
             VertexPositionColor[] vertices = new VertexPositionColor[boxCount.Count * 4];
@@ -61,7 +61,6 @@ namespace BasicTK_2D_Renderer
 
             foreach (Box box in boxCount)
             {
-
                 vertices[vertexCount++] = new VertexPositionColor(new Vector2(box.x, box.y + box.height), box.color);
                 vertices[vertexCount++] = new VertexPositionColor(new Vector2(box.x + box.width, box.y + box.height), box.color);
                 vertices[vertexCount++] = new VertexPositionColor(new Vector2(box.x + box.width, box.y), box.color);
@@ -157,6 +156,22 @@ namespace BasicTK_2D_Renderer
 
         protected override void OnUpdateFrame(FrameEventArgs args)
         {
+            this.colorFactor += this.deltaColorFactor;
+
+            if (this.colorFactor >= 1f)
+            {
+                this.colorFactor = 1f;
+                this.deltaColorFactor *= -1f;
+            }
+
+            if (this.colorFactor <= 0f)
+            {
+                this.colorFactor = 0f;
+                this.deltaColorFactor *= -1f;
+            }
+
+            this.shaderProgram.SetUniform("ColorFactor", this.colorFactor);
+
             base.OnUpdateFrame(args);
         }
 

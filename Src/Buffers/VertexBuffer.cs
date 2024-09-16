@@ -6,7 +6,7 @@ namespace BasicTK_2D_Renderer.Src.Buffers
     public sealed class VertexBuffer : IDisposable
     {
         public static readonly int MinVertexCount = 1;
-        public static readonly int MaxVertexCount = 100_000;
+        public static readonly int MaxVertexCount = 100000;
 
         private bool isDisposed;
 
